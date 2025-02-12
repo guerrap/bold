@@ -7,10 +7,20 @@ import { Tag } from "@/src/comps/Tag/Tag";
 import content from "@/src/content";
 import { DEPLOYMENT_FLAVOR } from "@/src/env";
 import { css } from "@/styled-system/css";
-import { IconBorrow, IconDashboard, IconEarn, IconLeverage, IconStake } from "@liquity2/uikit";
+import {
+  IconBorrow,
+  IconDashboard,
+  IconEarn,
+  IconLeverage,
+  IconStake,
+  TextButton,
+  Tooltip,
+} from "@liquity2/uikit";
 import Link from "next/link";
 import { AccountButton } from "./AccountButton";
 import { Menu } from "./Menu";
+import { IconMetrom } from "@/src/icons/IconMetrom";
+import { MetromPoints } from "./MetromPoints";
 
 const menuItems: ComponentProps<typeof Menu>["menuItems"] = [
   [content.menu.dashboard, "/", IconDashboard],
@@ -102,7 +112,30 @@ export function TopBar() {
           </div>
         </Link>
         <Menu menuItems={menuItems} />
-        <AccountButton />
+        <div
+          className={css({
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+            whiteSpace: "nowrap",
+          })}
+        >
+          <AccountButton />
+          <Tooltip
+            opener={({ buttonProps, setReference }) => (
+              <TextButton
+                ref={setReference}
+                label={<IconMetrom size={24} />}
+                className={css({
+                  color: "contentAlt2!",
+                })}
+                onClick={buttonProps.onClick}
+              />
+            )}
+          >
+            <MetromPoints />
+          </Tooltip>
+        </div>
       </div>
     </div>
   );
