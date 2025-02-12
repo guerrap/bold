@@ -74,7 +74,7 @@ jobs:
   deploy-app:
     name: Deploy app
     runs-on: ubuntu-latest
-    # needs: deploy-contracts
+    needs: deploy-contracts
     if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
     env:
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -93,27 +93,27 @@ jobs:
       - name: Install Vercel CLI
         run: pnpm install --global vercel@canary
 
-      # - name: Download deployment context
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: deployment-context
-      #     path: ./contracts
+      - name: Download deployment context
+        uses: actions/download-artifact@v4
+        with:
+          name: deployment-context
+          path: ./contracts
 
-      # - name: Prepare Environment from Latest Deployment Context
-      #   working-directory: ./contracts
-      #   env:
-      #     APP_ENV_FILE: ../frontend/app/.env.local
-      #     DEPLOYMENT_CONTEXT_FILE: ./deployment-context-latest.json
-      #   run: |
-      #     echo 'NEXT_PUBLIC_CHAIN_ID=1337' >> $APP_ENV_FILE
-      #     echo 'NEXT_PUBLIC_CHAIN_NAME=Liquity Testnet' >> $APP_ENV_FILE
-      #     echo 'NEXT_PUBLIC_CHAIN_CURRENCY=Ether|ETH|18' >> $APP_ENV_FILE
-      #     echo 'NEXT_PUBLIC_CHAIN_RPC_URL=https://testnet.liquity.org/rpc' >> $APP_ENV_FILE
-      #     echo 'NEXT_PUBLIC_CHAIN_BLOCK_EXPLORER=Liquity Testnet|https://testnet.liquity.org/' >> $APP_ENV_FILE
-      #     echo 'NEXT_PUBLIC_CHAIN_CONTRACT_MULTICALL=0xffB2BAa708261533b51D18394fd8AFd0E32aBC55|488' >> $APP_ENV_FILE
+      - name: Prepare Environment from Latest Deployment Context
+        working-directory: ./contracts
+        env:
+          APP_ENV_FILE: ../frontend/app/.env.local
+          DEPLOYMENT_CONTEXT_FILE: ./deployment-context-latest.json
+        run: |
+          echo 'NEXT_PUBLIC_CHAIN_ID=1337' >> $APP_ENV_FILE
+          echo 'NEXT_PUBLIC_CHAIN_NAME=Liquity Testnet' >> $APP_ENV_FILE
+          echo 'NEXT_PUBLIC_CHAIN_CURRENCY=Ether|ETH|18' >> $APP_ENV_FILE
+          echo 'NEXT_PUBLIC_CHAIN_RPC_URL=https://testnet.liquity.org/rpc' >> $APP_ENV_FILE
+          echo 'NEXT_PUBLIC_CHAIN_BLOCK_EXPLORER=Liquity Testnet|https://testnet.liquity.org/' >> $APP_ENV_FILE
+          echo 'NEXT_PUBLIC_CHAIN_CONTRACT_MULTICALL=0xffB2BAa708261533b51D18394fd8AFd0E32aBC55|488' >> $APP_ENV_FILE
 
-      #     pnpm tsx utils/deployment-artifacts-to-app-env.ts $DEPLOYMENT_CONTEXT_FILE $APP_ENV_FILE --append
-      #     cat $APP_ENV_FILE
+          pnpm tsx utils/deployment-artifacts-to-app-env.ts $DEPLOYMENT_CONTEXT_FILE $APP_ENV_FILE --append
+          cat $APP_ENV_FILE
 
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
