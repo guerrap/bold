@@ -8,7 +8,7 @@ export function MetromPoints() {
   const { points, loading } = useMetromPoints(address);
 
   if (!address)
-    return <div>Connect wallet to see your accrued Metrom points</div>;
+    return <div>Connect wallet to see your accrued Metrom points.</div>;
 
   if (loading)
     return (
