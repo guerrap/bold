@@ -4,6 +4,9 @@ function findSubgraphUrl(envFile: string) {
   const fs = require("fs");
   const path = require("path");
   const envPath = path.resolve(process.cwd(), envFile);
+
+  if (!fs.existsSync(envPath)) return null;
+
   const envContent = fs.readFileSync(envPath, "utf-8");
   for (const line of envContent.split("\n")) {
     if (line.trim().startsWith("NEXT_PUBLIC_SUBGRAPH_URL=")) {
@@ -17,7 +20,7 @@ const subgraphUrl = findSubgraphUrl(".env.local") ?? findSubgraphUrl(".env");
 
 if (!subgraphUrl) {
   throw new Error(
-    "Subgraph URL not found in .env or .env.local. Please set NEXT_PUBLIC_SUBGRAPH_URL.",
+    "Subgraph URL not found in .env or .env.local. Please set NEXT_PUBLIC_SUBGRAPH_URL."
   );
 }
 
