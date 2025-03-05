@@ -5,17 +5,18 @@ interface MetromPointsResponse {
   points: number;
 }
 
-export function useMetromPoints(account?: Address) {
+export function useMetromPoints(account?: Address, chainId?: number) {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["MetromPoints", account],
+    queryKey: ["MetromPoints", account, chainId],
     queryFn: async ({ queryKey }) => {
-      const account = queryKey[1];
-      if (!account) return null;
+      const account = queryKey[1] as string;
+      const chainId = queryKey[2] as number;
+      if (!account || !chainId) return null;
 
       try {
         const response = await fetch(
           new URL(
-            `https://lv2d.api.dev.metrom.xyz/v1/points/${account.toLowerCase()}`
+            `https://lv2d.api.dev.metrom.xyz/v1/${chainId}/liquity-v2/points/${account.toLowerCase()}`
           )
         );
 

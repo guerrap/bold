@@ -4,8 +4,8 @@ import { css } from "@/styled-system/css";
 import { Amount } from "../Amount/Amount";
 
 export function MetromPoints() {
-  const { address } = useAccount();
-  const { points, loading } = useMetromPoints(address);
+  const { address, chainId } = useAccount();
+  const { points, loading } = useMetromPoints(address, chainId);
 
   if (!address)
     return <div>Connect wallet to see your accrued Metrom points.</div>;
